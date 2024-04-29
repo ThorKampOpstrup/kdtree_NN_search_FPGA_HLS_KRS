@@ -213,7 +213,7 @@ kdtree_node *kdtree_NN(kdtree &tree, float target[DATA_DIMENSION])
 
 kdtree_node *kdtree_NN_intern(kdtree &tree, float target[DATA_DIMENSION], uint starting_index, uint dimension_to_compare)
 {
-  std::cout << "starting_index: " << starting_index << std::endl;
+  // std::cout << "starting_index: " << starting_index << std::endl;
   kdtree_node *current_node = tree.root + starting_index;
   if (current_node->left_index == 0 && current_node->right_index == 0)
   {
@@ -267,7 +267,7 @@ constexpr size_t MAX_STACK_SIZE = 128;
 
 void kdtree_NN_non_recursive_test(float *data_arr, uint *index_arr, float target[DATA_DIMENSION], uint &best_index)
 {
-  std::cout << "running kdtree_NN_non_recursive_test" << std::endl;
+  // std::cout << "running kdtree_NN_non_recursive_test" << std::endl;
   uint stack_index[MAX_STACK_SIZE];
   char stack_dimension[MAX_STACK_SIZE];
 
@@ -304,13 +304,13 @@ void kdtree_NN_non_recursive_test(float *data_arr, uint *index_arr, float target
 
     if (target[dimension] < data_arr[current_index * TMP_DIM + dimension])
     {
-      index_next = index_arr[current_index * N_INDEXES + LEFT_INDEX];
-      index_other = index_arr[current_index * N_INDEXES + RIGHT_INDEX];
+      index_next = index_arr[current_index * INDEX_DIMENSION_FPGA + LEFT_INDEX];
+      index_other = index_arr[current_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX];
     }
     else
     {
-      index_next = index_arr[current_index * N_INDEXES + RIGHT_INDEX];
-      index_other = index_arr[current_index * N_INDEXES + LEFT_INDEX];
+      index_next = index_arr[current_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX];
+      index_other = index_arr[current_index * INDEX_DIMENSION_FPGA + LEFT_INDEX];
     }
 
     float plane_dist = target[dimension] - data_arr[current_index * TMP_DIM + dimension];
@@ -407,8 +407,8 @@ void HLS_equivalent_NN(float *query_point, uint starting_index, uint dimension_t
   // closest_index = staring_index;
   // return;
   std::cout << "starting_index: " << starting_index << std::endl;
-  if (kdtree_nodes_indexes_FPGA[starting_index * N_INDEXES + LEFT_INDEX] == 0 &&
-      kdtree_nodes_indexes_FPGA[starting_index * N_INDEXES + RIGHT_INDEX] == 0)
+  if (kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + LEFT_INDEX] == 0 &&
+      kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX] == 0)
   {
     closest_index = starting_index;
     return;
@@ -417,13 +417,13 @@ void HLS_equivalent_NN(float *query_point, uint starting_index, uint dimension_t
   uint index_next, index_other;
   if (query_point[dimension_to_compare] < kdtree_nodes_data_FPGA[starting_index * TMP_DIM + dimension_to_compare])
   {
-    index_next = kdtree_nodes_indexes_FPGA[starting_index * N_INDEXES + LEFT_INDEX];
-    index_other = kdtree_nodes_indexes_FPGA[starting_index * N_INDEXES + RIGHT_INDEX];
+    index_next = kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + LEFT_INDEX];
+    index_other = kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX];
   }
   else
   {
-    index_next = kdtree_nodes_indexes_FPGA[starting_index * N_INDEXES + RIGHT_INDEX];
-    index_other = kdtree_nodes_indexes_FPGA[starting_index * N_INDEXES + LEFT_INDEX];
+    index_next = kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX];
+    index_other = kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + LEFT_INDEX];
   }
 
   if (index_next == 0)
@@ -470,7 +470,7 @@ void HLS_equivalent_NN(float *query_point, uint starting_index, uint dimension_t
 void HLS_get_next_index(float *data_arr, uint *index_arr, float *query_point, uint current_index, uint dimension_to_compare, uint &next_index, uint &other_index)
 {
   // check if both left and right are 0
-  if (index_arr[current_index * N_INDEXES + LEFT_INDEX] == 0 && index_arr[current_index * N_INDEXES + RIGHT_INDEX] == 0)
+  if (index_arr[current_index * INDEX_DIMENSION_FPGA + LEFT_INDEX] == 0 && index_arr[current_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX] == 0)
   {
     std::cout << "both left and right are 0" << std::endl;
     next_index = current_index;
@@ -479,13 +479,13 @@ void HLS_get_next_index(float *data_arr, uint *index_arr, float *query_point, ui
 
   if (data_arr[current_index * TMP_DIM + dimension_to_compare] > query_point[dimension_to_compare])
   {
-    next_index = index_arr[current_index * N_INDEXES + LEFT_INDEX];
-    other_index = index_arr[current_index * N_INDEXES + RIGHT_INDEX];
+    next_index = index_arr[current_index * INDEX_DIMENSION_FPGA + LEFT_INDEX];
+    other_index = index_arr[current_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX];
   }
   else
   {
-    next_index = index_arr[current_index * N_INDEXES + RIGHT_INDEX];
-    other_index = index_arr[current_index * N_INDEXES + LEFT_INDEX];
+    next_index = index_arr[current_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX];
+    other_index = index_arr[current_index * INDEX_DIMENSION_FPGA + LEFT_INDEX];
   }
 
   if (next_index == 0)
@@ -546,7 +546,7 @@ void kdtree_NN_non_recursive(float *data_arr, uint *index_arr, uint n_points, fl
   }
 
   // get all nodes in the other branch
-  other_index = index_arr[best_index * N_INDEXES + LEFT_INDEX];
+  other_index = index_arr[best_index * INDEX_DIMENSION_FPGA + LEFT_INDEX];
   indexes_to_check[0] = best_index; // replace the first index with the best index and use from 1 and down to check the other branch
   end_found = false;
   next_index = other_index;
@@ -598,12 +598,12 @@ void load_tree_to_arrays(kdtree &tree, float *point_arr, uint *index_arr)
     point_arr[i * tree.dim + X_index] = node->data[X_index];
     point_arr[i * tree.dim + Y_index] = node->data[Y_index];
     point_arr[i * tree.dim + Z_index] = node->data[Z_index];
-    index_arr[i * N_INDEXES + LEFT_INDEX] = node->left_index;
-    index_arr[i * N_INDEXES + RIGHT_INDEX] = node->right_index;
+    index_arr[i * INDEX_DIMENSION_FPGA + LEFT_INDEX] = node->left_index;
+    index_arr[i * INDEX_DIMENSION_FPGA + RIGHT_INDEX] = node->right_index;
     // index_arr[i * N_INDEXES + LEFT_INDEX] = 420+i;
     // index_arr[i * N_INDEXES + RIGHT_INDEX] = 6969+i;
-    index_arr[i * N_INDEXES + PARENT_INDEX] = node->parent_index;
-    index_arr[i * N_INDEXES + ORIGINAL_INDEX] = node->orginal_index;
+    index_arr[i * INDEX_DIMENSION_FPGA + PARENT_INDEX] = node->parent_index;
+    // index_arr[i * N_INDEXES + ORIGINAL_INDEX] = node->orginal_index;
     // std::cout << i << "indexes: left: " << index_arr[i * N_INDEXES + LEFT_INDEX] << ", right: " << index_arr[i * N_INDEXES + RIGHT_INDEX]
     // << ", parent: " << index_arr[i * N_INDEXES + PARENT_INDEX] << ", original: " << index_arr[i * N_INDEXES + ORIGINAL_INDEX] << std::endl;
     // std::cout << "node in: " << i << std::endl;

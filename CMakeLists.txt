@@ -46,18 +46,18 @@ if (ROS_VITIS)
   find_package(OpenCL REQUIRED)
 
   # offloaded_doublevadd_publisher
-  add_executable(kdtree_NN_search
-    src/kdtree_NN_search_publisher.cpp
-    src/kdtree_NN_search.cpp
+  add_executable(kdtree_NN_search_test
+    src/kdtree_NN_search_standalone_test.cpp
+    # src/kdtree_NN_search.cpp
   )
-  target_include_directories(kdtree_NN_search PUBLIC include)
-  target_link_libraries(kdtree_NN_search
+  target_include_directories(kdtree_NN_search_test PUBLIC include)
+  target_link_libraries(kdtree_NN_search_test
     kdtree
     ${OpenCL_LIBRARY}
     # ${PCL_LIBRARIES}
     pthread
   )
-  ament_target_dependencies(kdtree_NN_search
+  ament_target_dependencies(kdtree_NN_search_test
     rclcpp
     std_msgs
     vitis_common
@@ -87,6 +87,7 @@ if (ROS_VITIS)
       NAME kdtree_NN_search
       FILE src/kdtree_NN_search.cpp
       CONFIG src/kv260.cfg
+      # CLOCK 100000000:kdtree_NN_search
       INCLUDE
         include
       TYPE
@@ -99,7 +100,7 @@ if (ROS_VITIS)
   endif()
 
   install(TARGETS
-    kdtree_NN_search
+    kdtree_NN_search_test
     DESTINATION lib/${PROJECT_NAME}
   )
 

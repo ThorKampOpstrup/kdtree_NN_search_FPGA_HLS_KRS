@@ -11,6 +11,7 @@
 
 #define DATA_DIMENSION 4
 #define N_INDEXES (2+1+1) // left, right, parent , original_index
+#define INDEX_DIMENSION_FPGA 3
 
 #define TMP_DIM 3
 
