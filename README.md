@@ -1,6 +1,15 @@
 # kdtree_NN_search_FPGA_HLS_KRS
 This is a ROS2 test package to prove a kd-tree nearest neighbor search algorithm implemented in FPGA using High Level Synthesis (HLS) and [Kria Robotics Stack (KRS)](https://xilinx.github.io/KRS/sphinx/build/html/index.html). The package is developed for the [Xilinx Kria K260 starter kit](https://www.amd.com/en/products/system-on-modules/kria/k26/kr260-robotics-starter-kit.html).
 
+The intention of this package is to demonstrate the performance of the hardware implementation of the k-d tree nearest neighbor search algorithm on FPGA. This should be seen as a subpart of a larger system, where the FPGA is used to accelerate the computation of the nearest neighbor search algorithm, se below. The packages should be used af a subpart of a SLAM system, where the FPGA is used to accelerate the computation of the nearest neighbor search algorithm. The point cloud confidence mapper can be found [here](https://github.com/ThorKampOpstrup/pseudo_LiDAR_from_pc_pkg).
+
+<div style="display: flex; justify-content: center;">
+    <div style="margin: 10px;">
+        <img src="figures/General_design.svg" alt="Power measurements test setup" width="900"/>
+    </div>
+</div>
+
+
 ## Installation
 1. Follow the installation guide on the [KRS install](https://xilinx.github.io/KRS/sphinx/build/html/docs/install.html)
 2. Clone this repository into your krs_ws workspace
