@@ -88,7 +88,8 @@ The test setup for the power measurements is as follows:
         <img src="figures/power.svg" alt="Power measurements" width="500"/>
     </div>
 </div>
-[Xilinx Kria K260 starter kit image from here](https://www.amd.com/en/products/system-on-modules/kria/k26/kr260-robotics-starter-kit.html)
+
+[Xilinx Kria K260 starter kit image](https://www.amd.com/en/products/system-on-modules/kria/k26/kr260-robotics-starter-kit.html)
 
 |                            | FPGA kd-tree nn        | CPU kd-tree nn         | CPU linear nn          |
 |----------------------------|------------------------|------------------------|------------------------|
