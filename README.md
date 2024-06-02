@@ -9,6 +9,7 @@ The intention of this package is to demonstrate the performance of the hardware 
     </div>
 </div>
 
+[[ZED2I image](https://husarion.com/tutorials/ros-equipment/zed/)] | [[Xilinx Kria K260 starter kit image](https://www.amd.com/en/products/system-on-modules/kria/k26/kr260-robotics-starter-kit.html)]
 
 ## Installation
 1. Follow the installation guide on the [KRS install](https://xilinx.github.io/KRS/sphinx/build/html/docs/install.html)
@@ -87,3 +88,8 @@ The test setup for the power measurements is as follows:
         <img src="figures/power.svg" alt="Power measurements" width="500"/>
     </div>
 </div>
+[Xilinx Kria K260 starter kit image from here](https://www.amd.com/en/products/system-on-modules/kria/k26/kr260-robotics-starter-kit.html)
+
+|                            | FPGA kd-tree nn        | CPU kd-tree nn         | CPU linear nn          |
+|----------------------------|------------------------|------------------------|------------------------|
+| Energy per point [J/point] | 1.77 * 10<sup>-6</sup> | 8.81 * 10<sup>-6</sup> | 7.00 * 10<sup>-5</sup> |
