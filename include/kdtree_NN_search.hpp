@@ -6,13 +6,15 @@
 #ifndef XILINX_EXAMPLES_KDTREE_NN_SEARCH_PUBLISHER_INCLUDE_KDTREE_NN_SEARCH_HPP_
 #define XILINX_EXAMPLES_KDTREE_NN_SEARCH_PUBLISHER_INCLUDE_KDTREE_NN_SEARCH_HPP_
 
-extern "C" {
-    void kdtree_NN_search(
-            const unsigned int *in1,  // Read-Only Vector 1
-            const unsigned int *in2,  // Read-Only Vector 2
-            unsigned int *out,        // Output Result
-            int size                  // Size in integer
-    );
-}  // extern "C"
+extern "C"
+{
+    void kdtree_NN_search(int *tree_data_in,
+                          uint *tree_index_in,
+                          int *query_points_in,
+                          uint *found_query_point_index,
+                          bool rld_tree,
+                          uint n_kdtree_nodes,
+                          uint n_query_points);
+} // extern "C"
 
-#endif  // XILINX_EXAMPLES_VADD_PUBLISHER_INCLUDE_VADD_HPP_
+#endif // XILINX_EXAMPLES_VADD_PUBLISHER_INCLUDE_VADD_HPP_

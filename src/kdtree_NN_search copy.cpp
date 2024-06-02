@@ -154,7 +154,6 @@ void kdtree_NN_non_recursive_FPGA_separate_start(int *data_arr_start, uint *inde
 
             int plane_dist = target[dimension] - tmp_data;
             plane_dist *= plane_dist;
-            // std::cout << "plane_dist: " << plane_dist << std::endl;
 
             if (plane_dist < best_dist && index_other != 0)
             {
@@ -235,7 +234,6 @@ void load_kdtree(int *point_in, uint *index_in, uint n_nodes)
         memcpy(kd_tree_index_rest, &index_in[N_NODES_in_TOP_URAM * INDEX_DIMENSION], tmp_size - tmp_size_top);
     }
 }
-// Returns the index of the closest point not the original index
 void find_NNs(uint n_query_points)
 {
     uint n_per_impl = n_query_points / N_TOPS;
@@ -261,8 +259,7 @@ extern "C"
         uint *found_query_point_index,
         bool rld_tree,
         uint n_kdtree_nodes,
-        uint n_query_points
-    )
+        uint n_query_points)
     {
 #pragma HLS INTERFACE m_axi port = tree_data_in offset = slave bundle = gmem0
 #pragma HLS INTERFACE m_axi port = tree_index_in offset = slave bundle = gmem1

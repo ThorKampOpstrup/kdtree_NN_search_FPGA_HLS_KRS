@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// #include <pcl/point_types.h>
-// #include <pcl/point_cloud.h>
 
 #ifndef KDTREE_H
 #define KDTREE_H
@@ -24,20 +22,11 @@
 #define Y_index 1
 #define Z_index 2
 #define INTENSITY_index 3
-// #define ORIGINAL_INDEX_index 4
-
-// typedef struct Data {
-//   float x, y, z, intensity;
-//   uint original_index;
-// } Data;
 
 typedef struct kdtree_node {
-  // struct kdtree_node *left, *right, *parent;
   uint left_index = 0, right_index = 0, parent_index = 0, orginal_index = 0;
-  float data[DATA_DIMENSION]; //Should be changed to Data type
+  float data[DATA_DIMENSION];
 } kdtree_node;
-
-// ex: DATA = {x,y,z,intensity, orginal_index}
 
 
 typedef struct kdtree {
@@ -59,8 +48,6 @@ void add_node(kdtree &tree, float data[DATA_DIMENSION], uint original_index);
 // n is the number of points
 // The point will be added from the middle of the points array
 void kdtree_insert(kdtree &tree, float points[][DATA_DIMENSION], uint n);
-// void kdtree_insert(kdtree &tree, pcl::PointCloud<pcl::PointXYZI>::Ptr pc);
-// void kdtree_insert(kdtree &tree, pcl::PointCloud<pcl::PointXYZ>::Ptr pc);
 
 float distance_squared(kdtree &tree, float a_data[DATA_DIMENSION], float b_data[DATA_DIMENSION]);
 float kdtree_distance(kdtree &tree, float a_data[DATA_DIMENSION], float b_data[DATA_DIMENSION]);
@@ -68,15 +55,12 @@ float kdtree_distance(kdtree &tree, float a_data[DATA_DIMENSION], float b_data[D
 kdtree_node *kdtree_NN(kdtree &tree, float target[DATA_DIMENSION]);
 kdtree_node *kdtree_NN_intern(kdtree &tree, float target[DATA_DIMENSION], uint starting_index, uint dimension_to_compare);
 
-
-// kdtree_node* kdtree_NN_non_recursive_test(kdtree &tree, float target[DATA_DIMENSION]);
-
 void kdtree_NN_non_recursive_test(float *data_arr, uint *index_arr, float target[DATA_DIMENSION], uint &best_index);
 void HLS_equivalent_NN(float *query_point, uint starting_index, uint dimension_to_compare, uint &closest_index, float *kdtree_nodes_data_FPGA, uint *kdtree_nodes_indexes_FPGA);
-// void kdtree_NN_non_recursive(float *data_arr, uint *index_arr, uint n, uint dim, float *target, uint *result_index); //index is not the original index
 void kdtree_NN_non_recursive(float *data_arr, uint *index_arr, uint n_points, float *target, uint *result_index);
+
 // !the arrays should be allocated before calling this function
-void load_tree_to_arrays(kdtree &tree, float *point_data_in, uint *index_data_in);
+void load_tree_to_arrays(kdtree &tree, int *point_data_in, uint *index_data_in);
 uint get_org_index_from_index(kdtree &tree, uint index);
 
 void kdtree_print_node_info(kdtree &tree, uint index);

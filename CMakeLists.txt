@@ -18,20 +18,6 @@ find_package(std_msgs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(ament_vitis)
 
-# find_package(Qt5Core REQUIRED)
-# find_package(Qt5Gui REQUIRED)
-# find_package(Qt5Widgets REQUIRED)
-# find_package(VTK REQUIRED)
-
-# find_package(PCL 1.12 REQUIRED)
-# include_directories(${PCL_INCLUDE_DIRS})
-# link_directories(${PCL_LIBRARY_DIRS})
-# add_definitions(${PCL_DEFINITIONS})
-
-# message(STATUS "PCL_INCLUDE_DIRS:" ${PCL_INCLUDE_DIRS})
-# message(STATUS "PCL_LIBRARY_DIRS:" ${PCL_LIBRARY_DIRS})
-# message(STATUS "PCL_DEFINITIONS:" ${PCL_DEFINITIONS})
-
 include_directories(
   include
 )
@@ -45,10 +31,8 @@ if (ROS_VITIS)
   find_package(vitis_common REQUIRED)
   find_package(OpenCL REQUIRED)
 
-  # offloaded_doublevadd_publisher
   add_executable(kdtree_NN_search_test
     src/kdtree_NN_search_standalone_test.cpp
-    # src/kdtree_NN_search.cpp
   )
   target_include_directories(kdtree_NN_search_test PUBLIC include)
   target_link_libraries(kdtree_NN_search_test
@@ -72,12 +56,10 @@ if (ROS_VITIS)
         src/kdtree_NN_search.cpp
       HEADERS
         include
-      TESTBENCH
-        src/testbench.cpp
       TOPFUNCTION
       kdtree_NN_search
       CLOCK
-        4
+        5
       SYNTHESIS
     )
 
@@ -87,7 +69,6 @@ if (ROS_VITIS)
       NAME kdtree_NN_search
       FILE src/kdtree_NN_search.cpp
       CONFIG src/kv260.cfg
-      # CLOCK 100000000:kdtree_NN_search
       INCLUDE
         include
       TYPE

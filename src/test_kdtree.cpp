@@ -144,51 +144,8 @@ void kdtree_insert(kdtree &tree, float points[][DATA_DIMENSION], uint n)
     offset = std::pow(-1, i + 1) * ((i / 2) + 1);
     index = middle_index + offset;
     add_node(tree, points[index], index);
-    // print index
-    // print point data
-    //  std::cout << "point: " << points[index][0] << ", " << points[index][1] << ", " << points[index][2] << std::endl;
-    //  std::cout << "index: " << index << std::endl;
-    //  std::cout << "\r\n";
   }
 }
-
-// void kdtree_insert(kdtree &tree, pcl::PointCloud<pcl::PointXYZI>::Ptr pc) {
-//   uint n = pc->width * pc->height;
-//   uint middle_index = n / 2;
-//   uint offset, index;
-//   float data[DATA_DIMENSION] = {pc->points[middle_index].x, pc->points[middle_index].y, pc->points[middle_index].z, pc->points[middle_index].intensity};
-//   add_node(tree, data);
-
-//   for(uint i = 0; i < n - 1; i++) {
-//     offset = std::pow(-1, i + 1) * ((i / 2) + 1);
-//     // Calculate the actual index to access
-//     index = middle_index + offset;
-//     data[X_index] = pc->points[index].x;
-//     data[Y_index] = pc->points[index].y;
-//     data[Z_index] = pc->points[index].z;
-//     data[INTENSITY_index] = pc->points[index].intensity;
-//     data[ORIGINAL_INDEX_index] = index;
-//     add_node(tree, data);
-//   }
-// }
-
-// void kdtree_insert(kdtree &tree, pcl::PointCloud<pcl::PointXYZ>::Ptr pc) {
-//   uint n = pc->width * pc->height;
-//   uint middle_index = n / 2;
-//   uint offset, index;
-//   float data[DATA_DIMENSION] = {pc->points[middle_index].x, pc->points[middle_index].y, pc->points[middle_index].z, 0};
-//   add_node(tree, data);
-//   for(uint i = 1; i < n - 1; i++) {
-//     offset = std::pow(-1, i + 1) * ((i / 2) + 1);
-//     index = middle_index + offset;
-
-//     data[X_index] = pc->points[index].x;
-//     data[Y_index] = pc->points[index].y;
-//     data[Z_index] = pc->points[index].z;
-//     data[ORIGINAL_INDEX_index] = index;
-//     add_node(tree, data);
-//   }
-// }
 
 float distance_squared(kdtree &tree, float a_data[DATA_DIMENSION], float b_data[DATA_DIMENSION])
 {
@@ -338,74 +295,8 @@ void kdtree_NN_non_recursive_test(float *data_arr, uint *index_arr, float target
   // return best_index;
 }
 
-// kdtree_node *kdtree_NN_non_recursive_test(kdtree &tree, float target[DATA_DIMENSION])
-// {
-//   if (tree.root == nullptr)
-//   {
-//     return nullptr;
-//   }
-
-//   std::vector<std::pair<uint, uint>> stack;
-//   stack.emplace_back(0, 0); // start with root index and dimension 0 //Appends a new element to the end of the container.
-
-//   kdtree_node *best = nullptr;
-//   float best_dist = std::numeric_limits<float>::max();
-
-//   bool first_run = true;
-//   while (!stack.empty())
-//   {
-
-//     auto [index, dimension] = stack.back();
-//     stack.pop_back(); // Removes the last element of the container.
-
-//     if (index == 0 && !first_run)
-//     {
-//       continue;
-//     }
-
-//     kdtree_node *current_node = tree.root + index;
-//     float current_dist = distance_squared(tree, current_node->data, target);
-//     if (current_dist < best_dist)
-//     {
-//       best_dist = current_dist;
-//       best = current_node;
-//     }
-//     uint next_dimension = (dimension + 1) % tree.dim;
-//     uint index_next, index_other;
-
-//     if (target[dimension] < current_node->data[dimension])
-//     {
-//       index_next = current_node->left_index;
-//       index_other = current_node->right_index;
-//     }
-//     else
-//     {
-//       index_next = current_node->right_index;
-//       index_other = current_node->left_index;
-//     }
-
-//     // Check if the other side should also be searched
-//     float plane_dist = target[dimension] - current_node->data[dimension];
-//     plane_dist *= plane_dist;
-
-//     if (plane_dist < best_dist && index_other != 0)
-//     {
-//       stack.emplace_back(index_other, next_dimension);
-//     }
-//     if (index_next != 0)
-//     {
-//       stack.emplace_back(index_next, next_dimension);
-//     }
-//     first_run = false;
-//   }
-
-//   return best;
-// }
-
 void HLS_equivalent_NN(float *query_point, uint starting_index, uint dimension_to_compare, uint &closest_index, float *kdtree_nodes_data_FPGA, uint *kdtree_nodes_indexes_FPGA)
 {
-  // closest_index = staring_index;
-  // return;
   std::cout << "starting_index: " << starting_index << std::endl;
   if (kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + LEFT_INDEX] == 0 &&
       kdtree_nodes_indexes_FPGA[starting_index * INDEX_DIMENSION_FPGA + RIGHT_INDEX] == 0)
@@ -452,7 +343,7 @@ void HLS_equivalent_NN(float *query_point, uint starting_index, uint dimension_t
   float r = 0;
   HLS_distance_squared(query_point, &kdtree_nodes_data_FPGA[best * TMP_DIM], r);
 
-  float r_mark = (query_point[dimension_to_compare] - kdtree_nodes_data_FPGA[starting_index * TMP_DIM + dimension_to_compare]); //! should maybe include following *(query_point[dimension_to_compare]-kdtree_nodes_FPGA[staring_index * DATA_DIMENSION + dimension_to_compare]);
+  float r_mark = (query_point[dimension_to_compare] - kdtree_nodes_data_FPGA[starting_index * TMP_DIM + dimension_to_compare]);
 
   if (r_mark * r_mark < r && index_other != 0)
   {
@@ -554,82 +445,24 @@ void kdtree_NN_non_recursive(float *data_arr, uint *index_arr, uint n_points, fl
   {
     current_index = next_index;
   }
-
-  // std::cout << "closest_index(current_index): " << current_index << std::endl;
-  // result_index[0] = current_index;
-  // std::cout << "result_index: " << result_index[0] << std::endl;
-  // // check other branch after the closest point is found
-
-  // // check if distance to other branch is closer than distance to current closest point
-  // uint closest_index = current_index;
-  // if (other_index != 0)
-  // {
-  //   float sqrt_dist_to_best = 0;
-  //   HLS_distance_squared(target, &data_arr[closest_index * TMP_DIM], sqrt_dist_to_best);
-  //   float tmp_dist_to_other_branch = target[dimension_to_compare] - data_arr[other_index * TMP_DIM + dimension_to_compare];
-  //   float sqrt_dist_to_other = tmp_dist_to_other_branch * tmp_dist_to_other_branch;
-  //   std::cout << "sqrt_dist_to_best: " << sqrt_dist_to_best << std::endl;
-  //   std::cout << "sqrt_dist_to_other: " << sqrt_dist_to_other << std::endl;
-
-  //   if (sqrt_dist_to_other < sqrt_dist_to_best)
-  //   {
-  //     std::cout << "checking other branch" << std::endl;
-  //     current_index = other_index;
-
-  //   }
-  // }
 }
 
-void load_tree_to_arrays(kdtree &tree, float *point_arr, uint *index_arr)
+void load_tree_to_arrays(kdtree &tree, int *point_arr, uint *index_arr)
 {
   // kd_tree_node *node;
   kdtree_node *node = tree.root;
   for (uint i = 0; i < tree.number_of_nodes; i++)
   {
     node = tree.root + i;
-    // if (i != 0)
-    // {
-    //   std::cout << "tmp_node2 arr out: " << i - 1 << std::endl;
-    //   std::cout << "point: " << point_arr[(i - 1) * tree.dim] << ", " << point_arr[(i - 1) * tree.dim + 1] << ", " << point_arr[(i - 1) * tree.dim + 2] << std::endl;
-    //   std::cout << "indexes: " << index_arr[(i - 1) * N_CHILDS] << ", " << index_arr[(i - 1) * N_CHILDS + 1] << ", " << index_arr[(i - 1) * N_CHILDS + 2] << std::endl;
-    //   std::cout << std::endl;
-    // }
-
-    point_arr[i * tree.dim + X_index] = node->data[X_index];
-    point_arr[i * tree.dim + Y_index] = node->data[Y_index];
-    point_arr[i * tree.dim + Z_index] = node->data[Z_index];
+    point_arr[i * tree.dim + X_index] = (int)(1000.0*node->data[X_index]);
+    point_arr[i * tree.dim + Y_index] = (int)(1000.0*node->data[Y_index]);
+    point_arr[i * tree.dim + Z_index] = (int)(1000.0*node->data[Z_index]);
     index_arr[i * INDEX_DIMENSION_FPGA + LEFT_INDEX] = node->left_index;
     index_arr[i * INDEX_DIMENSION_FPGA + RIGHT_INDEX] = node->right_index;
-    // index_arr[i * N_INDEXES + LEFT_INDEX] = 420+i;
-    // index_arr[i * N_INDEXES + RIGHT_INDEX] = 6969+i;
     index_arr[i * INDEX_DIMENSION_FPGA + PARENT_INDEX] = node->parent_index;
-    // index_arr[i * N_INDEXES + ORIGINAL_INDEX] = node->orginal_index;
-    // std::cout << i << "indexes: left: " << index_arr[i * N_INDEXES + LEFT_INDEX] << ", right: " << index_arr[i * N_INDEXES + RIGHT_INDEX]
-    // << ", parent: " << index_arr[i * N_INDEXES + PARENT_INDEX] << ", original: " << index_arr[i * N_INDEXES + ORIGINAL_INDEX] << std::endl;
-    // std::cout << "node in: " << i << std::endl;
-    // std::cout << "point: " << node->data[X_index] << ", " << node->data[Y_index] << ", " << node->data[Z_index] << std::endl;
-    // std::cout << "indexes: " << node->left_index << ", " << node->right_index << ", " << node->parent_index << std::endl;
-    // std::cout << "node arr out: " << i << std::endl;
-    // std::cout << "point: " << point_arr[i * tree.dim] << ", " << point_arr[i * tree.dim + 1] << ", " << point_arr[i * tree.dim + 2] << std::endl;
-    // std::cout << "indexes: " << index_arr[i * N_CHILDS] << ", " << index_arr[i * N_CHILDS + 1] << ", " << index_arr[i * N_CHILDS + 2] << std::endl;
-
-    // std::cout << "node arr out: " << i << std::endl;
-    // std::cout << "point: " << point_arr[i * tree.dim] << ", " << point_arr[i * tree.dim + 1] << ", " << point_arr[i * tree.dim + 2] << std::endl;
-    // std::cout << "indexes: " << index_arr[i * N_CHILDS] << ", " << index_arr[i * N_CHILDS + 1] << ", " << index_arr[i * N_CHILDS + 2] << std::endl;
-    // std::cout << std::endl;
   }
-  // std::cout << "print after" << std::endl;
-  // std::cout << "size of uint: " << sizeof(uint) << std::endl;
-  // for (uint i = 0; i < tree.number_of_nodes; i++)
-  // {
-  //   std::cout << i << "indexes: left: " << index_arr[i * N_INDEXES + LEFT_INDEX] << ", right: " << index_arr[i * N_INDEXES + RIGHT_INDEX] << ", parent: " << index_arr[i * N_INDEXES + PARENT_INDEX] << ", original: " << index_arr[i * N_INDEXES + ORIGINAL_INDEX] << std::endl;
-  // }
 }
 
-// uint get_org_index_from_index(kdtree &tree, uint index)
-// {
-//   return tree.root[index].data[ORIGINAL_INDEX_index];
-// }
 
 void kdtree_print_node_info(kdtree &tree, uint index)
 {
