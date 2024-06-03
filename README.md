@@ -9,7 +9,7 @@ The intention of this package is to demonstrate the performance of the hardware 
     </div>
 </div>
 
-[[ZED2I image](https://husarion.com/tutorials/ros-equipment/zed/)] | [[Xilinx Kria K260 starter kit image](https://www.amd.com/en/products/system-on-modules/kria/k26/kr260-robotics-starter-kit.html)]
+[[ZED2i image](https://husarion.com/tutorials/ros-equipment/zed/)] | [[Xilinx Kria K260 starter kit image](https://www.amd.com/en/products/system-on-modules/kria/k26/kr260-robotics-starter-kit.html)]
 
 ## Installation
 1. Follow the installation guide on the [KRS install](https://xilinx.github.io/KRS/sphinx/build/html/docs/install.html)
